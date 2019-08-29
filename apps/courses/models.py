@@ -1,6 +1,5 @@
 from django.db import models
 
-
 from apps.users.models import BaseModel
 from apps.organizations.models import Teacher
 
@@ -14,7 +13,7 @@ DEGREE_CHOICES = (
 class Course(BaseModel):
     teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE, verbose_name='所属讲师')
     name = models.CharField(max_length=50, verbose_name='课程名称')
-    decs = models.CharField(max_length=150, verbose_name='课程简介')
+    desc = models.CharField(max_length=150, verbose_name='课程简介')
     learn_times = models.BigIntegerField(default=0, verbose_name='学习时长（分钟数）')
     degree = models.CharField(verbose_name='难度', choices=DEGREE_CHOICES, max_length=2)
     students = models.IntegerField(default=0, verbose_name='学习人数')
@@ -29,6 +28,9 @@ class Course(BaseModel):
         verbose_name = '课程信息'
         verbose_name_plural = verbose_name
 
+    def __str__(self):
+        return self.name
+
 
 class Lesson(BaseModel):
     course = models.ForeignKey(Course, on_delete=models.CASCADE, verbose_name='课程')
@@ -38,6 +40,9 @@ class Lesson(BaseModel):
     class Meta:
         verbose_name = '课程章节'
         verbose_name_plural = verbose_name
+
+    def __str__(self):
+        return self.name
 
 
 class Video(BaseModel):
@@ -50,12 +55,18 @@ class Video(BaseModel):
         verbose_name = '视频'
         verbose_name_plural = verbose_name
 
+    def __str__(self):
+        return self.name
+
 
 class CourseResource(BaseModel):
     course = models.ForeignKey(Course, on_delete=models.CASCADE, verbose_name='课程')
     name = models.CharField(max_length=50, verbose_name='名称')
-    file = models.FileField(max_length=300, upload_to='course/resource/%Y/%m/%d', verbose_name='下载地址')
+    file = models.FileField(max_length=300, upload_to='media/course/resource/%Y/%m/%d', verbose_name='下载地址')
 
     class Meta:
         verbose_name = '课程资源'
         verbose_name_plural = verbose_name
+
+    def __str__(self):
+        return self.name
